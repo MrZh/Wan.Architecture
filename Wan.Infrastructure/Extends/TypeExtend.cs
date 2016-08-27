@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Wan.Infrastructure.Commands;
 
 namespace Wan.Infrastructure.Extends
 {
@@ -64,6 +65,157 @@ namespace Wan.Infrastructure.Extends
 
             }
             return !hasKey ? null : propsList;
+        }
+
+        public static string GetSql<T>(this Type classType, CommandEnum commandEnum = CommandEnum.Insert)
+        {
+            List<string> propsList = new List<string>();
+            System.Reflection.PropertyInfo[] ps = classType.GetProperties();
+            String tableName = classType.GetTableName();
+
+            foreach (PropertyInfo i in ps)
+            {
+                bool isKey = i.IsPrimaryKey();
+                if (isKey)
+                {
+                    propsList.Insert(0, i.Name);
+                }
+                else
+                {
+                    propsList.Add(i.Name);
+                }
+
+            }
+            if (commandEnum.Equals(CommandEnum.Insert))
+            {
+                String sqlText = "insert into " + tableName + "(";
+                String valueText = " values ( ";
+                foreach (string props in propsList)
+                {
+                    sqlText += props + ",";
+                    valueText += "@" + props + ",";
+                }
+
+                sqlText = sqlText.Substring(0, sqlText.Length - 1);
+                valueText = valueText.Substring(0, valueText.Length - 1);
+                sqlText += ")";
+                valueText += ")";
+
+                return sqlText + valueText;
+
+            }
+
+            if (commandEnum.Equals(CommandEnum.Update))
+            {
+                String sqlText = "update " + tableName + " set ";
+                for (int i = 1; i < propsList.Count; i++)
+                {
+                    sqlText = sqlText + propsList[i] + "=@" + propsList[i] + ",";
+                }
+
+                sqlText = sqlText.Substring(0, sqlText.Length - 1);
+                sqlText += " where " + propsList[0] + "=@" + propsList[0];
+
+                return sqlText;
+            }
+
+            if (commandEnum.Equals(CommandEnum.Delete))
+            {
+                String sqlText = "delete from " + tableName;
+                sqlText += " where " + propsList[0] + "=@" + propsList[0];
+
+                return sqlText;
+            }
+
+            return null;
+        }
+
+        public static string GetSql<T>(this Type classType, T type, CommandEnum commandEnum = CommandEnum.Insert)
+        {
+            List<string> propsList = new List<string>();
+            System.Reflection.PropertyInfo[] ps = classType.GetProperties();
+            String tableName = classType.GetTableName();
+            if (type == null)
+            {
+                foreach (PropertyInfo i in ps)
+                {
+                    bool isKey = i.IsPrimaryKey();
+                    if (isKey)
+                    {
+                        propsList.Insert(0, i.Name);
+                    }
+                    else
+                    {
+                        propsList.Add(i.Name);
+                    }
+
+                }
+            }
+            else
+            {
+                foreach (PropertyInfo i in ps)
+                {
+                    var temp = i.GetValue(type);
+                    if (temp != null)
+                    {
+                        bool isKey = i.IsPrimaryKey();
+                        if (isKey)
+                        {
+                            propsList.Insert(0, i.Name);
+                        }
+
+                        else
+                        {
+                            propsList.Add(i.Name);
+                        }
+                    }
+                }
+            }
+
+
+
+            if (commandEnum.Equals(CommandEnum.Insert))
+            {
+                String sqlText = "insert into " + tableName + "(";
+                String valueText = " values ( ";
+                foreach (string props in propsList)
+                {
+                    sqlText += props + ",";
+                    valueText += "@" + props + ",";
+                }
+
+                sqlText = sqlText.Substring(0, sqlText.Length - 1);
+                valueText = valueText.Substring(0, valueText.Length - 1);
+                sqlText += ")";
+                valueText += ")";
+
+                return sqlText + valueText;
+
+            }
+
+            if (commandEnum.Equals(CommandEnum.Update))
+            {
+                String sqlText = "update " + tableName + " set ";
+                for (int i = 1; i < propsList.Count; i++)
+                {
+                    sqlText = sqlText + propsList[i] + "=@" + propsList[i] + ",";
+                }
+
+                sqlText = sqlText.Substring(0, sqlText.Length - 1);
+                sqlText += " where " + propsList[0] + "=@" + propsList[0];
+
+                return sqlText;
+            }
+
+            if (commandEnum.Equals(CommandEnum.Delete))
+            {
+                String sqlText = "delete from " + tableName;
+                sqlText += " where " + propsList[0] + "=@" + propsList[0];
+
+                return sqlText;
+            }
+
+            return null;
         }
     }
 }
