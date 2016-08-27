@@ -67,7 +67,13 @@ namespace Wan.Infrastructure.Extends
             return !hasKey ? null : propsList;
         }
 
-        public static string GetSql<T>(this Type classType, CommandEnum commandEnum = CommandEnum.Insert)
+        /// <summary>
+        /// 获得当前类型的Sql语句
+        /// </summary>
+        /// <param name="classType">当前type</param>
+        /// <param name="commandEnum">sql类型</param>
+        /// <returns></returns>
+        public static string GetSql(this Type classType, CommandEnum commandEnum = CommandEnum.Insert)
         {
             List<string> propsList = new List<string>();
             System.Reflection.PropertyInfo[] ps = classType.GetProperties();
@@ -130,8 +136,20 @@ namespace Wan.Infrastructure.Extends
             return null;
         }
 
+        /// <summary>
+        /// 获得当前类型的Sql语句
+        /// </summary>
+        /// <typeparam name="T">当前type</typeparam>
+        /// <param name="classType">当前type</param>
+        /// <param name="type">当前type的对象</param>
+        /// <param name="commandEnum">sql类型</param>
+        /// <returns></returns>
         public static string GetSql<T>(this Type classType, T type, CommandEnum commandEnum = CommandEnum.Insert)
         {
+            if (typeof(T) != classType)
+            {
+                return null;
+            }
             List<string> propsList = new List<string>();
             System.Reflection.PropertyInfo[] ps = classType.GetProperties();
             String tableName = classType.GetTableName();
@@ -171,8 +189,6 @@ namespace Wan.Infrastructure.Extends
                     }
                 }
             }
-
-
 
             if (commandEnum.Equals(CommandEnum.Insert))
             {
