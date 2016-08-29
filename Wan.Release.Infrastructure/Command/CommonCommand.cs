@@ -87,17 +87,23 @@ namespace Wan.Release.Infrastructure.Command
             return new BaseCommand(obj.GetType().GetSql(commandEnum), obj);
         }
 
+        /// <summary>
+        /// 只用于批量增加数据
+        /// </summary>
+        /// <param name="objs"></param>
+        /// <param name="commandEnum"></param>
+        /// <returns></returns>
         public static BaseCommand InitBaseCommand(List<object> objs, CommandEnum commandEnum = CommandEnum.Insert)
         {
             if (objs.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(objs));
-            return new BaseCommand(objs[0].GetType().GetSql(objs[0], commandEnum), objs);
+            return new BaseCommand(objs[0].GetType().GetSql(CommandEnum.Insert), objs);
         }
 
         public static List<BaseCommand> InitBaseCommands(List<object> objs, CommandEnum commandEnum = CommandEnum.Insert)
         {
             if (objs.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(objs));
 
-            return objs.Select(item => new BaseCommand(item.GetType().GetSql(item), item)).ToList();
+            return objs.Select(item => new BaseCommand(item.GetType().GetSql(item, commandEnum), item)).ToList();
         }
     }
 }

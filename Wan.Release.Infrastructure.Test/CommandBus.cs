@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Wan.Release.Infrastructure.Base;
 
 namespace Wan.Release.Infrastructure.Test
@@ -9,6 +10,11 @@ namespace Wan.Release.Infrastructure.Test
         {
             BaseContext.BaseCommand(command);
             Console.WriteLine(command.CommandId);
+        }
+
+        public static void SendCommands(List<BaseCommand> commands)
+        {
+            BaseContext.BaseTransaction(commands);
         }
     }
 }
