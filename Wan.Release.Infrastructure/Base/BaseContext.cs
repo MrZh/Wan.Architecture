@@ -80,7 +80,7 @@ namespace Wan.Release.Infrastructure.Base
                     catch (DataException ex)
                     {
                         trans.Rollback();
-                        //Logger.Error(ex);
+                        Logger.Error(ex);
                         throw;
                     }
                     trans.Commit();
@@ -117,7 +117,7 @@ namespace Wan.Release.Infrastructure.Base
                     catch (DataException ex)
                     {
                         trans.Rollback();
-                        //Logger.Error(ex);
+                        Logger.Error(ex);
                         throw;
                     }
                     trans.Commit();
@@ -154,7 +154,7 @@ namespace Wan.Release.Infrastructure.Base
                     catch (DataException ex)
                     {
                         trans.Rollback();
-                        //Logger.Error(ex);
+                        Logger.Error(ex);
                         throw;
                     }
                     trans.Commit();
@@ -177,6 +177,7 @@ namespace Wan.Release.Infrastructure.Base
             {
                 conn.Open();
                 var result = conn.Execute(baseComand.Sql, baseComand.Obj);
+                Logger.Info(baseComand.Sql);
                 conn.Close();
                 return result;
             }
@@ -193,6 +194,7 @@ namespace Wan.Release.Infrastructure.Base
             {
                 conn.Open();
                 var result = conn.Execute(baseComand.Sql, baseComand.Obj);
+                Logger.Info(baseComand.Sql);
                 conn.Close();
                 return result;
             }
