@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Base\BaseCommand.cs" />
     <Compile Include="Base\BaseContext.cs" />
+    <Compile Include="Base\BaseEvent.cs" />
     <Compile Include="Base\CommandEnum.cs" />
     <Compile Include="Command\Command.cs" />
     <Compile Include="Command\CommonCommand.cs" />
