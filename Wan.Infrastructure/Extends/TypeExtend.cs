@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
 using Wan.Infrastructure.Commands;
 
 namespace Wan.Infrastructure.Extends
@@ -71,13 +70,13 @@ namespace Wan.Infrastructure.Extends
         /// <returns></returns>
         public static string GetSql(this Type classType, CommandEnum commandEnum = CommandEnum.Insert)
         {
-            List<string> propsList = new List<string>();
-            System.Reflection.PropertyInfo[] ps = classType.GetProperties();
-            String tableName = classType.GetTableName();
+            var propsList = new List<string>();
+            var ps = classType.GetProperties();
+            var tableName = classType.GetTableName();
 
-            foreach (PropertyInfo i in ps)
+            foreach (var i in ps)
             {
-                bool isKey = i.IsPrimaryKey();
+                var isKey = i.IsPrimaryKey();
                 if (isKey)
                 {
                     propsList.Insert(0, i.Name);
@@ -90,9 +89,9 @@ namespace Wan.Infrastructure.Extends
             }
             if (commandEnum.Equals(CommandEnum.Insert))
             {
-                String sqlText = "insert into " + tableName + "(";
-                String valueText = " values ( ";
-                foreach (string props in propsList)
+                var sqlText = "insert into " + tableName + "(";
+                var valueText = " values ( ";
+                foreach (var props in propsList)
                 {
                     sqlText += props + ",";
                     valueText += "@" + props + ",";
@@ -109,8 +108,8 @@ namespace Wan.Infrastructure.Extends
 
             if (commandEnum.Equals(CommandEnum.Update))
             {
-                String sqlText = "update " + tableName + " set ";
-                for (int i = 1; i < propsList.Count; i++)
+                var sqlText = "update " + tableName + " set ";
+                for (var i = 1; i < propsList.Count; i++)
                 {
                     sqlText = sqlText + propsList[i] + "=@" + propsList[i] + ",";
                 }
@@ -121,21 +120,18 @@ namespace Wan.Infrastructure.Extends
                 return sqlText;
             }
 
-            if (commandEnum.Equals(CommandEnum.Delete))
+            if (!commandEnum.Equals(CommandEnum.Delete)) return null;
             {
-                String sqlText = "delete from " + tableName;
+                var sqlText = "delete from " + tableName;
                 sqlText += " where " + propsList[0] + "=@" + propsList[0];
 
                 return sqlText;
             }
-
-            return null;
         }
 
         /// <summary>
         /// 获得当前类型的Sql语句
         /// </summary>
-        /// <typeparam name="T">当前type</typeparam>
         /// <param name="classType">当前type</param>
         /// <param name="type">当前type的对象</param>
         /// <param name="commandEnum">sql类型</param>
@@ -146,34 +142,32 @@ namespace Wan.Infrastructure.Extends
             {
                 return null;
             }
-            List<string> propsList = new List<string>();
-            System.Reflection.PropertyInfo[] ps = classType.GetProperties();
-            String tableName = classType.GetTableName();
+            var propsList = new List<string>();
+            var ps = classType.GetProperties();
+            var tableName = classType.GetTableName();
 
-            foreach (PropertyInfo i in ps)
+            foreach (var i in ps)
             {
                 var temp = i.GetValue(type);
-                if (temp != null)
+                if (temp == null) continue;
+                var isKey = i.IsPrimaryKey();
+                if (isKey)
                 {
-                    bool isKey = i.IsPrimaryKey();
-                    if (isKey)
-                    {
-                        propsList.Insert(0, i.Name);
-                    }
+                    propsList.Insert(0, i.Name);
+                }
 
-                    else
-                    {
-                        propsList.Add(i.Name);
-                    }
+                else
+                {
+                    propsList.Add(i.Name);
                 }
             }
 
 
             if (commandEnum.Equals(CommandEnum.Insert))
             {
-                String sqlText = "insert into " + tableName + "(";
-                String valueText = " values ( ";
-                foreach (string props in propsList)
+                var sqlText = "insert into " + tableName + "(";
+                var valueText = " values ( ";
+                foreach (var props in propsList)
                 {
                     sqlText += props + ",";
                     valueText += "@" + props + ",";
@@ -190,8 +184,8 @@ namespace Wan.Infrastructure.Extends
 
             if (commandEnum.Equals(CommandEnum.Update))
             {
-                String sqlText = "update " + tableName + " set ";
-                for (int i = 1; i < propsList.Count; i++)
+                var sqlText = "update " + tableName + " set ";
+                for (var i = 1; i < propsList.Count; i++)
                 {
                     sqlText = sqlText + propsList[i] + "=@" + propsList[i] + ",";
                 }
@@ -202,15 +196,13 @@ namespace Wan.Infrastructure.Extends
                 return sqlText;
             }
 
-            if (commandEnum.Equals(CommandEnum.Delete))
+            if (!commandEnum.Equals(CommandEnum.Delete)) return null;
             {
-                String sqlText = "delete from " + tableName;
+                var sqlText = "delete from " + tableName;
                 sqlText += " where " + propsList[0] + "=@" + propsList[0];
 
                 return sqlText;
             }
-
-            return null;
         }
     }
 }

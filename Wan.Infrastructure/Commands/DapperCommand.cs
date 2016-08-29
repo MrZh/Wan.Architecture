@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Wan.Infrastructure.Entity;
 using Wan.Infrastructure.Extends;
 
 namespace Wan.Infrastructure.Commands
 {
     public class DapperCommand<T> : BaseCommand<T> where T : Entity.Entity
     {
-        protected List<string> PropsList = null;
+        protected List<string> PropsList;
 
         protected string TableName = string.Empty;
         public DapperCommand(T data)
@@ -23,7 +19,7 @@ namespace Wan.Infrastructure.Commands
 
         public DapperCommand(T data, CommandEnum typEnum)
         {
-            this.Obj = data;
+            Obj = data;
             Init(data);
             Sql = GetInsertSql();
             if (typEnum.Equals(CommandEnum.Update))
@@ -43,14 +39,14 @@ namespace Wan.Infrastructure.Commands
 
             //ColumnList = new List<string>();
             PropsList = new List<string>();
-            Type type = typeof(T);
+            var type = typeof(T);
             TableName = type.GetTableName();
-            PropertyInfo[] ps = type.GetProperties();
+            var ps = type.GetProperties();
             if (data == null)
             {
-                foreach (PropertyInfo i in ps)
+                foreach (var i in ps)
                 {
-                    bool isKey = i.IsPrimaryKey();
+                    var isKey = i.IsPrimaryKey();
                     if (isKey)
                     {
                         PropsList.Insert(0, i.Name);
@@ -64,21 +60,19 @@ namespace Wan.Infrastructure.Commands
 
                 return;
             }
-            foreach (PropertyInfo i in ps)
+            foreach (var i in ps)
             {
                 var temp = i.GetValue(data);
-                if (temp != null)
+                if (temp == null) continue;
+                var isKey = i.IsPrimaryKey();
+                if (isKey)
                 {
-                    bool isKey = i.IsPrimaryKey();
-                    if (isKey)
-                    {
-                        PropsList.Insert(0, i.Name);
-                    }
+                    PropsList.Insert(0, i.Name);
+                }
 
-                    else
-                    {
-                        PropsList.Add(i.Name);
-                    }
+                else
+                {
+                    PropsList.Add(i.Name);
                 }
             }
         }
@@ -93,9 +87,9 @@ namespace Wan.Infrastructure.Commands
             {
                 return null;
             }
-            String sqlText = "insert into " + TableName + "(";
-            String valueText = " values ( ";
-            foreach (string props in PropsList)
+            var sqlText = "insert into " + TableName + "(";
+            var valueText = " values ( ";
+            foreach (var props in PropsList)
             {
                 sqlText += props + ",";
                 valueText += "@" + props + ",";
@@ -115,8 +109,8 @@ namespace Wan.Infrastructure.Commands
         /// <returns></returns>
         private string GetUpdateSql()
         {
-            String sqlText = "update " + TableName + " set ";
-            for (int i = 1; i < PropsList.Count; i++)
+            var sqlText = "update " + TableName + " set ";
+            for (var i = 1; i < PropsList.Count; i++)
             {
                 sqlText = sqlText + PropsList[i] + "=@" + PropsList[i] + ",";
             }
@@ -133,7 +127,7 @@ namespace Wan.Infrastructure.Commands
         /// <returns></returns>
         private string GetDeleteSql()
         {
-            String sqlText = "delete from " + TableName;
+            var sqlText = "delete from " + TableName;
             sqlText += " where " + PropsList[0] + "=@" + PropsList[0];
 
             return sqlText;

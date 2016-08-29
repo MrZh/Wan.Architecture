@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wan.Infrastructure.Extends
 {
@@ -19,16 +15,7 @@ namespace Wan.Infrastructure.Extends
         /// <returns>是否主键</returns>
         public static bool IsPrimaryKey(this PropertyInfo propertyInfo)
         {
-
-            foreach (var item in propertyInfo.GetCustomAttributes())
-            {
-                if (item is KeyAttribute)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return propertyInfo.GetCustomAttributes().OfType<KeyAttribute>().Any();
         }
 
         /// <summary>
@@ -49,11 +36,10 @@ namespace Wan.Infrastructure.Extends
                 }
                 else
                 {
-                    if (item is ColumnAttribute)
-                    {
-                        ColumnAttribute columnAttribute = item as ColumnAttribute;
-                        return columnAttribute.Name;
-                    }
+                    var attribute = item as ColumnAttribute;
+                    if (attribute == null) continue;
+                    var columnAttribute = attribute;
+                    return columnAttribute.Name;
                 }
             }
 
@@ -69,12 +55,9 @@ namespace Wan.Infrastructure.Extends
         {
             foreach (var item in propertyInfo.GetCustomAttributes())
             {
-
-                if (item is ColumnAttribute)
-                {
-                    ColumnAttribute columnAttribute = item as ColumnAttribute;
-                    return columnAttribute.Name;
-                }
+                if (!(item is ColumnAttribute)) continue;
+                var columnAttribute = item as ColumnAttribute;
+                return columnAttribute.Name;
             }
 
             return "";
