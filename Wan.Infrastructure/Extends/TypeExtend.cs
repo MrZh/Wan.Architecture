@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Wan.Infrastructure.Commands;
 
 namespace Wan.Infrastructure.Extends
@@ -144,51 +140,34 @@ namespace Wan.Infrastructure.Extends
         /// <param name="type">当前type的对象</param>
         /// <param name="commandEnum">sql类型</param>
         /// <returns></returns>
-        public static string GetSql<T>(this Type classType, T type, CommandEnum commandEnum = CommandEnum.Insert)
+        public static string GetSql(this Type classType, object type, CommandEnum commandEnum = CommandEnum.Insert)
         {
-            if (typeof(T) != classType)
+            if (type.GetType() != classType)
             {
                 return null;
             }
             List<string> propsList = new List<string>();
             System.Reflection.PropertyInfo[] ps = classType.GetProperties();
             String tableName = classType.GetTableName();
-            if (type == null)
+
+            foreach (PropertyInfo i in ps)
             {
-                foreach (PropertyInfo i in ps)
+                var temp = i.GetValue(type);
+                if (temp != null)
                 {
                     bool isKey = i.IsPrimaryKey();
                     if (isKey)
                     {
                         propsList.Insert(0, i.Name);
                     }
+
                     else
                     {
                         propsList.Add(i.Name);
                     }
-
                 }
             }
-            else
-            {
-                foreach (PropertyInfo i in ps)
-                {
-                    var temp = i.GetValue(type);
-                    if (temp != null)
-                    {
-                        bool isKey = i.IsPrimaryKey();
-                        if (isKey)
-                        {
-                            propsList.Insert(0, i.Name);
-                        }
 
-                        else
-                        {
-                            propsList.Add(i.Name);
-                        }
-                    }
-                }
-            }
 
             if (commandEnum.Equals(CommandEnum.Insert))
             {

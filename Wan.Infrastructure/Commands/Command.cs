@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Wan.Infrastructure.Extends;
 
 namespace Wan.Infrastructure.Commands
@@ -12,22 +9,22 @@ namespace Wan.Infrastructure.Commands
     {
         public string Id { get; protected set; }
 
-        protected List<string> PropsList = null;
+        protected List<string> PropsList;
 
         protected string TableName = string.Empty;
 
-        protected T CommandType = default(T);
+        protected T CommandType;
 
         protected Command()
         {
-            this.Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString();
             Init();
         }
 
         protected Command(T commandType)
         {
-            this.Id = Guid.NewGuid().ToString();
-            this.CommandType = commandType;
+            Id = Guid.NewGuid().ToString();
+            CommandType = commandType;
             Init();
         }
 
@@ -36,9 +33,9 @@ namespace Wan.Infrastructure.Commands
 
             //ColumnList = new List<string>();
             PropsList = new List<string>();
-            Type type = typeof(T);
+            var type = typeof(T);
             TableName = type.GetTableName();
-            System.Reflection.PropertyInfo[] ps = type.GetProperties();
+            var ps = type.GetProperties();
             if (CommandType == null)
             {
                 foreach (PropertyInfo i in ps)
