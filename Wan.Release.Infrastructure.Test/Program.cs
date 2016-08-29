@@ -13,8 +13,7 @@ namespace Wan.Release.Infrastructure.Test
         {
             Command<Student> command = new Command<Student>(new Student { Id = Guid.NewGuid().ToString(), Name = "1", Age = "2" });
             CommandBus.SendCommand(command);
-            var com =
-                Command<Student>.InitBaseCommand(new Student { Id = Guid.NewGuid().ToString(), Name = "1", Age = "2" });
+            var com = Command<Student>.InitBaseCommand(new Student { Id = Guid.NewGuid().ToString(), Name = "1", Age = "2" });
             Console.WriteLine(com.Sql);
         }
     }
