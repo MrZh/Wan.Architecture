@@ -6,8 +6,16 @@ using Wan.Release.Infrastructure.Extends;
 
 namespace Wan.Release.Infrastructure.Command
 {
+    /// <summary>
+    /// Just for sth very special
+    /// </summary>
     public class CommonCommand : BaseCommand
     {
+        /// <summary>
+        /// Init for object and commandType
+        /// </summary>
+        /// <param name="obj">obj</param>
+        /// <param name="commandEnum">commandType</param>
         public CommonCommand(object obj, CommandEnum commandEnum)
         {
             CommandId = Guid.NewGuid().ToString();
@@ -15,6 +23,11 @@ namespace Wan.Release.Infrastructure.Command
             Obj = obj;
         }
 
+        /// <summary>
+        /// Init for list of object and commandType
+        /// </summary>
+        /// <param name="objs">obj</param>
+        /// <param name="commandEnum">commandType</param>
         public CommonCommand(List<object> objs, CommandEnum commandEnum)
         {
             if (objs == null) throw new ArgumentNullException(nameof(objs));
@@ -27,7 +40,11 @@ namespace Wan.Release.Infrastructure.Command
             Obj = objs;
             Sql = objs[0].GetType().GetSql(objs[0], commandEnum);
         }
-
+        
+        /// <summary>
+        /// Init for list of object
+        /// </summary>
+        /// <param name="objs">obj</param>
         public CommonCommand(List<object> objs)
         {
             if (objs == null) throw new ArgumentNullException(nameof(objs));
@@ -41,6 +58,10 @@ namespace Wan.Release.Infrastructure.Command
             Sql = objs[0].GetType().GetSql(objs[0]);
         }
 
+        /// <summary>
+        /// Init for object
+        /// </summary>
+        /// <param name="obj">obj</param>
         public CommonCommand(object obj)
         {
             CommandId = Guid.NewGuid().ToString();
@@ -48,11 +69,17 @@ namespace Wan.Release.Infrastructure.Command
             Obj = obj;
         }
 
+        /// <summary>
+        /// Init for obj with commandType
+        /// </summary>
+        /// <param name="obj">obj</param>
+        /// <param name="justSql">true for full sql, false for the sql from obj</param>
+        /// <param name="commandEnum">commandType</param>
         public CommonCommand(object obj, bool justSql = true, CommandEnum commandEnum = CommandEnum.Insert)
         {
             if (justSql)
             {
-                Obj = null;
+                Obj = obj;
                 Sql = obj.GetType().GetSql(commandEnum);
             }
 
@@ -65,8 +92,15 @@ namespace Wan.Release.Infrastructure.Command
             CommandId = Guid.NewGuid().ToString();
         }
 
+        /// <summary>
+        /// Init for list of obj with commandType
+        /// </summary>
+        /// <param name="objs">obj</param>
+        /// <param name="justSql">true for full sql, false for the sql from obj</param>
+        /// <param name="commandEnum">commandType</param>
         public CommonCommand(List<object> objs, bool justSql = true, CommandEnum commandEnum = CommandEnum.Insert)
         {
+            if (objs.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(objs));
             if (justSql)
             {
                 Obj = null;
@@ -82,6 +116,12 @@ namespace Wan.Release.Infrastructure.Command
             CommandId = Guid.NewGuid().ToString();
         }
 
+        /// <summary>
+        /// Init BaseCommand for object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="commandEnum"></param>
+        /// <returns></returns>
         public static BaseCommand InitBaseCommand(object obj, CommandEnum commandEnum = CommandEnum.Insert)
         {
             return new BaseCommand(obj.GetType().GetSql(commandEnum), obj);
@@ -99,6 +139,12 @@ namespace Wan.Release.Infrastructure.Command
             return new BaseCommand(objs[0].GetType().GetSql(CommandEnum.Insert), objs);
         }
 
+        /// <summary>
+        /// Init BaseCommand for everyone in objs
+        /// </summary>
+        /// <param name="objs"></param>
+        /// <param name="commandEnum"></param>
+        /// <returns></returns>
         public static List<BaseCommand> InitBaseCommands(List<object> objs, CommandEnum commandEnum = CommandEnum.Insert)
         {
             if (objs.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(objs));
