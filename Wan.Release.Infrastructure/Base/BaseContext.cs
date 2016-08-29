@@ -2,7 +2,9 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using Dapper;
+using log4net;
 
 namespace Wan.Release.Infrastructure.Base
 {
@@ -10,7 +12,7 @@ namespace Wan.Release.Infrastructure.Base
     {
         public static string ConnString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
         private readonly string _connString;
-
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(BaseCommand));
         public BaseContext(string connString)
         {
             _connString = connString;
@@ -24,7 +26,7 @@ namespace Wan.Release.Infrastructure.Base
         /// <returns>是否成功</returns>
         public int ExecTransaction(BaseCommand baseCommand, int commandTimeout = 0)
         {
-            var result = 0;
+            int result;
             if (commandTimeout <= 0)
             {
                 commandTimeout = 30;
@@ -110,11 +112,7 @@ namespace Wan.Release.Infrastructure.Base
                 {
                     try
                     {
-                        foreach (var baseCommand in baseCommands)
-                        {
-                            result += conn.Execute(baseCommand.Sql, baseCommand.Obj, trans, commandTimeout, CommandType.Text);
-                        }
-
+                        result += baseCommands.Sum(baseCommand => conn.Execute(baseCommand.Sql, baseCommand.Obj, trans, commandTimeout, CommandType.Text));
                     }
                     catch (DataException ex)
                     {
@@ -151,11 +149,7 @@ namespace Wan.Release.Infrastructure.Base
                 {
                     try
                     {
-                        foreach (var baseCommand in baseCommands)
-                        {
-                            result += conn.Execute(baseCommand.Sql, baseCommand.Obj, trans, commandTimeout, CommandType.Text);
-                        }
-
+                        result += baseCommands.Sum(baseCommand => conn.Execute(baseCommand.Sql, baseCommand.Obj, trans, commandTimeout, CommandType.Text));
                     }
                     catch (DataException ex)
                     {
@@ -172,6 +166,11 @@ namespace Wan.Release.Infrastructure.Base
             return result;
         }
 
+        /// <summary>
+        /// 执行Command
+        /// </summary>
+        /// <param name="baseComand"></param>
+        /// <returns></returns>
         public int ExecCommand(BaseCommand baseComand)
         {
             using (IDbConnection conn = new SqlConnection(_connString))
@@ -183,6 +182,11 @@ namespace Wan.Release.Infrastructure.Base
             }
         }
 
+        /// <summary>
+        /// 执行Command
+        /// </summary>
+        /// <param name="baseComand"></param>
+        /// <returns></returns>
         public static int BaseCommand(BaseCommand baseComand)
         {
             using (IDbConnection conn = new SqlConnection(ConnString))
