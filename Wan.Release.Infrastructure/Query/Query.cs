@@ -31,5 +31,10 @@ namespace Wan.Release.Infrastructure.Query
         {
             return new BaseQuery(typeof(T).GetPrimaryQuerySql(queryEnum), obj);
         }
+
+        public static BaseQuery InitQuery(object obj, string sql)
+        {
+            return new BaseQuery(sql, obj);
+        }
     }
 }
