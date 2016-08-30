@@ -43,7 +43,7 @@ namespace Wan.Release.Infrastructure.Base
                     catch (DataException ex)
                     {
                         trans.Rollback();
-                        //Logger.Error(ex);
+                        Logger.Error(ex);
                         throw;
                     }
                     trans.Commit();

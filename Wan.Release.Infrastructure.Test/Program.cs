@@ -12,15 +12,20 @@ namespace Wan.Release.Infrastructure.Test
     {
         static void Main(string[] args)
         {
+            //Student stu = new Student();
+            //stu.Age = "2";
+            //stu.Name = "3";
+            //string temp = stu.GetType().GetQuerySql(stu, QueryEnum.In);
             List<object> list = new List<object>();
             for (int i = 0; i < 10; i++)
             {
                 list.Add(new Student { Id = Guid.NewGuid().ToString(), Age = i.ToString(), Name = Guid.NewGuid().ToString(), CreateTime = DateTime.Now });
 
             }
-            BaseCommand command =new BaseCommand("sss",list);
+           // BaseCommand command=new BaseCommand();
+            BaseCommand command = new BaseCommand("sss", list);
             //Command<Student> command = new Command<Student>(new Student { Id = Guid.NewGuid().ToString(), Name = "1", Age = "2" });
-           // CommonCommand command = new CommonCommand(list);
+            // CommonCommand command = new CommonCommand(list);
 
             var com = CommonCommand.InitBaseCommands(list);
 

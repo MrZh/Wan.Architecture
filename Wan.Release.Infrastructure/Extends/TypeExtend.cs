@@ -204,5 +204,66 @@ namespace Wan.Release.Infrastructure.Extends
                 return sqlText;
             }
         }
+
+        /// <summary>
+        /// in now is forbidden
+        /// </summary>
+        /// <param name="classType"></param>
+        /// <param name="type"></param>
+        /// <param name="queryEnum"></param>
+        /// <returns></returns>
+        public static string GetQuerySql(this Type classType, object type, QueryEnum queryEnum = QueryEnum.Equal)
+        {
+            if (type.GetType() != classType)
+            {
+                return null;
+            }
+            var tempExp = " = ";
+            if (queryEnum.Equals(QueryEnum.In))
+            {
+                tempExp = " = ";
+            }
+            var propsList = new List<string>();
+            var ps = classType.GetProperties();
+            var tableName = classType.GetTableName();
+            var exp = " where ";
+            foreach (var i in ps)
+            {
+                var temp = i.GetValue(type);
+                if (temp == null) continue;
+                var isKey = i.IsPrimaryKey();
+                if (isKey)
+                {
+                    propsList.Insert(0, i.Name);
+                }
+
+                else
+                {
+                    var relId = i.GetRelId();
+                    if (!string.IsNullOrEmpty(relId))
+                    {
+                        exp = exp + relId + tempExp + "@" + i.Name + ",";
+                        propsList.Add(relId);
+                    }
+                    else
+                    {
+                        propsList.Add(i.Name);
+                    }
+
+                }
+            }
+
+            var sqlText = "select ";
+            foreach (var props in propsList)
+            {
+                sqlText += props + ",";
+            }
+            sqlText = sqlText.Substring(0, sqlText.Length - 1);
+            sqlText = sqlText + " from " + tableName;
+            exp = exp.Substring(0, exp.Length - 1);
+            exp = exp.Replace(",", " and ");
+
+            return sqlText + exp;
+        }
     }
 }

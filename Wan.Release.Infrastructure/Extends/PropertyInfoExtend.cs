@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using Wan.Release.Infrastructure.Attribute;
 
 namespace Wan.Release.Infrastructure.Extends
 {
@@ -61,6 +62,28 @@ namespace Wan.Release.Infrastructure.Extends
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// 获得是否是外键
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        public static bool GetIsRelId(this PropertyInfo propertyInfo)
+        {
+            var isKey = propertyInfo.GetCustomAttributes().OfType<KeyAttribute>().Any();
+            return !isKey && propertyInfo.GetCustomAttributes().OfType<RelIdAttribute>().Any();
+        }
+
+        /// <summary>
+        /// 获得是否是外键
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        public static string GetRelId(this PropertyInfo propertyInfo)
+        {
+            var isKey = propertyInfo.GetCustomAttributes().OfType<KeyAttribute>().Any();
+            return isKey ? null : propertyInfo.GetCustomAttributes().OfType<RelIdAttribute>().Select(item => item as RelIdAttribute).Select(columnAttribute => string.IsNullOrWhiteSpace(columnAttribute.Name) ? propertyInfo.Name : columnAttribute.Name).FirstOrDefault();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Wan.Release.Infrastructure.Base
             CommandId = Guid.NewGuid().ToString();
         }
 
-        public BaseCommand()
+        protected BaseCommand()
         {
 
         }

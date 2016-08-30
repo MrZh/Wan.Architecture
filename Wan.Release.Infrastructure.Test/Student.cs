@@ -9,6 +9,7 @@ namespace Wan.Release.Infrastructure.Test
     public class Student : Entity.Entity
     {
 
+        [RelId]
         public string Name { get; set; }
 
         [RelId]
