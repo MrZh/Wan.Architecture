@@ -7,9 +7,9 @@ namespace Wan.Release.Infrastructure.Entity
     {
         [Key]
         [StringLength(50)]
-        public string Id { get; set; }
+        public string Id { get;  set; }
 
-        public Entity()
+        protected Entity()
         {
             Id = Guid.NewGuid().ToString();
         }

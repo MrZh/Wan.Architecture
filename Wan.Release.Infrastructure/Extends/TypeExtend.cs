@@ -206,7 +206,7 @@ namespace Wan.Release.Infrastructure.Extends
         }
 
         /// <summary>
-        /// in now is forbidden
+        /// in expression now is forbidden
         /// </summary>
         /// <param name="classType"></param>
         /// <param name="type"></param>
