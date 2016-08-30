@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Wan.Release.Infrastructure.Attribute;
 
 namespace Wan.Release.Infrastructure.Test
 {
@@ -10,6 +11,7 @@ namespace Wan.Release.Infrastructure.Test
 
         public string Name { get; set; }
 
+        [RelId]
         public string Age { get; set; }
 
         public DateTime CreateTime { get; set; }

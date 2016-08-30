@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Wan.Release.Infrastructure.Base
 {
-    public class BaseEvent
+    public abstract class BaseEvent
     {
         public string Id { get; protected set; }
         public DateTime CreateTime { get; protected set; }
@@ -13,7 +13,7 @@ namespace Wan.Release.Infrastructure.Base
 
         public string Author { get; protected set; }
 
-        public BaseEvent(BaseCommand command, string author = null)
+        protected BaseEvent(BaseCommand command, string author = null)
         {
             Author = author;
             EventBody = JsonConvert.SerializeObject(command);
@@ -21,7 +21,7 @@ namespace Wan.Release.Infrastructure.Base
             CreateTime = DateTime.Now;
         }
 
-        public BaseEvent(List<BaseCommand> command, string author = null)
+        protected BaseEvent(List<BaseCommand> command, string author = null)
         {
             Author = author;
             EventBody = JsonConvert.SerializeObject(command);
@@ -29,9 +29,6 @@ namespace Wan.Release.Infrastructure.Base
             CreateTime = DateTime.Now;
         }
 
-        public virtual void SentEvent()
-        {
-            //do
-        }
+        public abstract void SentEvent();
     }
 }

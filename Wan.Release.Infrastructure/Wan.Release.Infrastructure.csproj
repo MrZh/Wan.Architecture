@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\RelIdAttribute.cs" />
     <Compile Include="Base\BaseCommand.cs" />
     <Compile Include="Base\BaseContext.cs" />
     <Compile Include="Base\BaseEvent.cs" />
