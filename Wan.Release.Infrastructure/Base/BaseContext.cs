@@ -63,7 +63,7 @@ namespace Wan.Release.Infrastructure.Base
         /// <returns>是否成功</returns>
         public static int BaseTransaction(BaseCommand baseCommand, int commandTimeout = 0)
         {
-            var result = 0;
+            int result;
             if (commandTimeout <= 0)
             {
                 commandTimeout = 30;
