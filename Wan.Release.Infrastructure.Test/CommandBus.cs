@@ -8,13 +8,13 @@ namespace Wan.Release.Infrastructure.Test
     {
         public static void SendCommand(BaseCommand command)
         {
-            BaseContext.BaseCommand(command);
+            CommandContext.BaseCommand(command);
             Console.WriteLine(command.CommandId);
         }
 
         public static void SendCommands(List<BaseCommand> commands)
         {
-            BaseContext.BaseTransaction(commands);
+            CommandContext.BaseTransaction(commands);
         }
     }
 }

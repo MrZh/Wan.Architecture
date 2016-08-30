@@ -265,5 +265,42 @@ namespace Wan.Release.Infrastructure.Extends
 
             return sqlText + exp;
         }
+
+        public static string GetPrimaryQuerySql(this Type classType, QueryEnum queryEnum = QueryEnum.Equal)
+        {
+            var tempExp = " = ";
+            if (queryEnum.Equals(QueryEnum.In))
+            {
+                tempExp = " in ";
+            }
+            var propsList = new List<string>();
+            var ps = classType.GetProperties();
+            var tableName = classType.GetTableName();
+
+            foreach (var i in ps)
+            {
+                var isKey = i.IsPrimaryKey();
+                if (isKey)
+                {
+                    propsList.Insert(0, i.Name);
+                }
+
+                else
+                {
+                    var relId = i.GetRelId();
+                    propsList.Add(!string.IsNullOrEmpty(relId) ? relId : i.Name);
+                }
+            }
+
+            var sqlText = "select ";
+            foreach (var props in propsList)
+            {
+                sqlText += props + ",";
+            }
+            sqlText = sqlText.Substring(0, sqlText.Length - 1);
+            sqlText = sqlText + " from " + tableName;
+            var exp = " where " + propsList[0] + " " + tempExp + " @" + propsList[0];
+            return sqlText + exp;
+        }
     }
 }

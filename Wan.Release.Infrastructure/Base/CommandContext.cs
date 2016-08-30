@@ -8,12 +8,12 @@ using log4net;
 
 namespace Wan.Release.Infrastructure.Base
 {
-    public class BaseContext
+    public class CommandContext
     {
         public static string ConnString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
         private readonly string _connString;
         private static readonly ILog Logger = LogManager.GetLogger(typeof(BaseCommand));
-        public BaseContext(string connString)
+        public CommandContext(string connString)
         {
             _connString = connString;
         }
