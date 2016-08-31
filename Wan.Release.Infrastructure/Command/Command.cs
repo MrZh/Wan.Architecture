@@ -124,7 +124,7 @@ namespace Wan.Release.Infrastructure.Command
         }
 
         /// <summary>
-        /// 只用于用于批量添加数据
+        /// 只用于用于批量添加数据 批量更新某一些字段和批量删除
         /// </summary>
         /// <param name="objs"></param>
         /// <param name="commandEnum"></param>
