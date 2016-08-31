@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Wan.Release.Infrastructure.Base
 {
-    public abstract class BaseEvent
+    public class BaseEvent
     {
         public string Id { get; protected set; }
         public DateTime CreateTime { get; protected set; }
@@ -29,6 +31,25 @@ namespace Wan.Release.Infrastructure.Base
             CreateTime = DateTime.Now;
         }
 
-        public abstract void SentEvent();
+        public virtual void SentEvent()
+        {
+            //do nothing
+            // if you want to do sth please override this method
+        }
+
+        public static BaseEvent InitEvent(BaseCommand command, string author = null)
+        {
+            return new BaseEvent(command, author);
+        }
+
+        public static BaseEvent InitEvent(List<BaseCommand> command, string author = null)
+        {
+            return new BaseEvent(command, author);
+        }
+
+        public static List<BaseEvent> InitEvents(List<BaseCommand> command, string author = null)
+        {
+            return command.Select(baseCommand => new BaseEvent(baseCommand, author)).ToList();
+        }
     }
 }

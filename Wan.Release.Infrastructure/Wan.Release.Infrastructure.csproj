@@ -62,10 +62,11 @@
     <Compile Include="Base\BaseEvent.cs" />
     <Compile Include="Base\CommandEnum.cs" />
     <Compile Include="Base\QueryContext.cs" />
+    <Compile Include="CommandBus\BaseCommandBus.cs" />
     <Compile Include="Command\Command.cs" />
     <Compile Include="Command\CommonCommand.cs" />
     <Compile Include="Entity\Entity.cs" />
-    <Compile Include="Event\EventBus.cs" />
+    <Compile Include="Event\BaseEventBus.cs" />
     <Compile Include="Extends\PropertyInfoExtend.cs" />
     <Compile Include="Extends\TypeExtend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

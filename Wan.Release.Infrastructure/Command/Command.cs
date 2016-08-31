@@ -132,7 +132,7 @@ namespace Wan.Release.Infrastructure.Command
         public static BaseCommand InitBaseCommand(List<T> objs, CommandEnum commandEnum = CommandEnum.Insert)
         {
             if (objs.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(objs));
-            return new BaseCommand(objs[0].GetType().GetSql(CommandEnum.Insert), objs);
+            return new BaseCommand(objs[0].GetType().GetSql(commandEnum), objs);
         }
 
         /// <summary>
