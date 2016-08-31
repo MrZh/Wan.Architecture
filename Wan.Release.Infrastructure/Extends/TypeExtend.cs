@@ -366,4 +366,3 @@ namespace Wan.Release.Infrastructure.Extends
         }
     }
 }
-}
